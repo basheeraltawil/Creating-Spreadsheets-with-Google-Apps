@@ -1,0 +1,874 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Complete Guide: Creating Spreadsheets with Google Apps Script</title>
+    <style>
+        :root {
+            --primary: #4285f4;
+            --secondary: #34a853;
+            --accent: #ea4335;
+            --dark: #2d2d2d;
+            --light: #f8f9fa;
+            --gray: #6c757d;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.7;
+            color: var(--dark);
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 3rem 2rem;
+            border-radius: 15px;
+            margin-bottom: 2rem;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+        
+        .tagline {
+            font-size: 1.3rem;
+            opacity: 0.9;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .nav-container {
+            background: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+        
+        .nav-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            justify-content: center;
+        }
+        
+        .nav-link {
+            background: var(--light);
+            padding: 0.8rem 1.5rem;
+            border-radius: 50px;
+            text-decoration: none;
+            color: var(--dark);
+            font-weight: 500;
+            transition: all 0.3s ease;
+            border: 1px solid transparent;
+        }
+        
+        .nav-link:hover {
+            background: var(--primary);
+            color: white;
+            transform: translateY(-2px);
+        }
+        
+        .section {
+            background: white;
+            border-radius: 15px;
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            border-left: 5px solid var(--primary);
+        }
+        
+        h2 {
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+            font-size: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        h3 {
+            color: var(--dark);
+            margin: 1.5rem 0 1rem;
+            font-size: 1.5rem;
+        }
+        
+        p {
+            margin-bottom: 1.2rem;
+            font-size: 1.1rem;
+        }
+        
+        .card {
+            background: var(--light);
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-left: 4px solid var(--secondary);
+        }
+        
+        .info-box {
+            background: #e3f2fd;
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-left: 4px solid var(--primary);
+        }
+        
+        .warning-box {
+            background: #fff3e0;
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-left: 4px solid var(--accent);
+        }
+        
+        code {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.95rem;
+        }
+        
+        pre {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 1.5rem;
+            border-radius: 10px;
+            overflow-x: auto;
+            line-height: 1.5;
+            margin: 1.5rem 0;
+            font-size: 0.95rem;
+        }
+        
+        .step {
+            display: flex;
+            margin: 2rem 0;
+            gap: 1.5rem;
+        }
+        
+        .step-number {
+            background: var(--primary);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            flex-shrink: 0;
+            font-size: 1.2rem;
+        }
+        
+        .step-content {
+            flex: 1;
+        }
+        
+        .concept-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+        
+        .concept-card {
+            background: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            border-top: 4px solid var(--secondary);
+            transition: transform 0.3s ease;
+        }
+        
+        .concept-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .concept-card h4 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+        }
+        
+        .button {
+            background: var(--primary);
+            color: white;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            text-align: center;
+        }
+        
+        .button:hover {
+            background: #3367d6;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .button-secondary {
+            background: var(--secondary);
+        }
+        
+        .button-secondary:hover {
+            background: #2e8b57;
+        }
+        
+        .center {
+            text-align: center;
+            margin: 2rem 0;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 3rem;
+            padding: 2rem;
+            border-top: 1px solid #e0e0e0;
+            color: var(--gray);
+        }
+        
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.2rem;
+            }
+            
+            .section {
+                padding: 1.5rem;
+            }
+            
+            .step {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .step-number {
+                align-self: flex-start;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Creating Spreadsheets with Google Apps Script</h1>
+            <p class="tagline">A comprehensive guide to programmatically creating, formatting, and managing Google Sheets with clear explanations and practical examples</p>
+        </header>
+        
+        <div class="nav-container">
+            <div class="nav-links">
+                <a href="#introduction" class="nav-link">Introduction</a>
+                <a href="#basics" class="nav-link">Basic Concepts</a>
+                <a href="#creation" class="nav-link">Creating Sheets</a>
+                <a href="#formatting" class="nav-link">Formatting</a>
+                <a href="#advanced" class="nav-link">Advanced Features</a>
+                <a href="#ui" class="nav-link">User Interfaces</a>
+                <a href="#best-practices" class="nav-link">Best Practices</a>
+            </div>
+        </div>
+        
+        <section id="introduction" class="section">
+            <h2>📚 Introduction to Google Apps Script</h2>
+            <p>Google Apps Script is a cloud-based JavaScript platform that lets you extend Google Workspace applications like Sheets, Docs, and Forms. It provides a powerful way to automate tasks, create custom functions, and build web applications.</p>
+            
+            <div class="card">
+                <h3>Why Use Apps Script for Spreadsheets?</h3>
+                <p>While you can manually create spreadsheets, Apps Script enables you to:</p>
+                <ul>
+                    <li><strong>Automate repetitive tasks</strong> - Create templates or reports automatically</li>
+                    <li><strong>Generate dynamic content</strong> - Pull data from APIs or other sources</li>
+                    <li><strong>Create custom interfaces</strong> - Build dialog boxes and sidebars for users</li>
+                    <li><strong>Schedule operations</strong> - Run scripts on a timer without manual intervention</li>
+                    <li><strong>Integrate with other services</strong> - Connect Sheets to Gmail, Calendar, or external APIs</li>
+                </ul>
+            </div>
+            
+            <div class="info-box">
+                <h4>💡 Key Advantage</h4>
+                <p>Apps Script runs in Google's cloud, so there's nothing to install. Your scripts are stored with your Google account and can be accessed from any device with a browser.</p>
+            </div>
+        </section>
+        
+        <section id="basics" class="section">
+            <h2>🔰 Basic Concepts and Setup</h2>
+            
+            <div class="step">
+                <div class="step-number">1</div>
+                <div class="step-content">
+                    <h3>Accessing the Apps Script Editor</h3>
+                    <p>You can access the script editor in several ways:</p>
+                    <ul>
+                        <li>From Google Sheets: <strong>Extensions → Apps Script</strong></li>
+                        <li>Direct URL: <a href="https://script.google.com" target="_blank">script.google.com</a></li>
+                        <li>From Google Drive: <strong>New → More → Google Apps Script</strong></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="step">
+                <div class="step-number">2</div>
+                <div class="step-content">
+                    <h3>Understanding the Script Environment</h3>
+                    <p>When you create a new script, you'll see a code editor with a default function. The environment includes:</p>
+                    <ul>
+                        <li><strong>Code.gs</strong> - Your main script file (you can create more)</li>
+                        <li><strong>Libraries</strong> - References to other scripts</li>
+                        <li><strong>Triggers</strong> - Set scripts to run automatically</li>
+                        <li><strong>Services</strong> - APIs for Google products (Sheets, Drive, etc.)</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="step">
+                <div class="step-number">3</div>
+                <div class="step-content">
+                    <h3>The SpreadsheetApp Service</h3>
+                    <p>This is your main gateway to working with Google Sheets. Key methods include:</p>
+                    <pre><code>// Basic SpreadsheetApp usage examples
+SpreadsheetApp.create(name)           // Create a new spreadsheet
+SpreadsheetApp.openById(id)          // Open existing by ID
+SpreadsheetApp.openByUrl(url)        // Open existing by URL
+SpreadsheetApp.getActiveSpreadsheet() // Get current spreadsheet</code></pre>
+                </div>
+            </div>
+        </section>
+        
+        <section id="creation" class="section">
+            <h2>📄 Creating Spreadsheets Programmatically</h2>
+            
+            <div class="concept-grid">
+                <div class="concept-card">
+                    <h4>Basic Creation</h4>
+                    <p>The simplest way to create a spreadsheet is with a single line of code. The spreadsheet will be created in the root of your Google Drive.</p>
+                    <pre><code>function createBasicSpreadsheet() {
+  const spreadsheet = SpreadsheetApp.create("My New Spreadsheet");
+  Logger.log("Created: " + spreadsheet.getUrl());
+  return spreadsheet.getId();
+}</code></pre>
+                </div>
+                
+                <div class="concept-card">
+                    <h4>With Advanced Options</h4>
+                    <p>For more control, use the Sheets Advanced Service which allows setting properties during creation.</p>
+                    <pre><code>function createAdvancedSpreadsheet() {
+  const sheet = Sheets.newSpreadsheet();
+  sheet.properties = Sheets.newSpreadsheetProperties();
+  sheet.properties.title = "Advanced Spreadsheet";
+  return Sheets.Spreadsheets.create(sheet);
+}</code></pre>
+                </div>
+            </div>
+            
+            <div class="info-box">
+                <h4>📝 Understanding the Return Value</h4>
+                <p>When you create a spreadsheet, you get a <code>Spreadsheet</code> object with methods to:</p>
+                <ul>
+                    <li><code>getId()</code> - Get the unique identifier</li>
+                    <li><code>getUrl()</code> - Get the direct URL to open it</li>
+                    <li><code>getName()</code> - Get the current name</li>
+                    <li><code>getSheets()</code> - Access individual sheets/tabs</li>
+                </ul>
+            </div>
+            
+            <h3>Complete Creation Example</h3>
+            <p>Here's a practical function that creates a spreadsheet and returns useful information:</p>
+            <pre><code>/**
+ * Creates a new spreadsheet and returns creation details
+ * @param {string} name - The name for the new spreadsheet
+ * @returns {Object} Information about the created spreadsheet
+ */
+function createSpreadsheetWithDetails(name) {
+  try {
+    // Create the spreadsheet
+    const spreadsheet = SpreadsheetApp.create(name);
+    
+    // Get creation details
+    const details = {
+      id: spreadsheet.getId(),
+      url: spreadsheet.getUrl(),
+      name: spreadsheet.getName(),
+      sheets: spreadsheet.getSheets().map(sheet => sheet.getName())
+    };
+    
+    // Log the details
+    console.log("Spreadsheet created successfully:");
+    console.log("Name: " + details.name);
+    console.log("URL: " + details.url);
+    console.log("Sheets: " + details.sheets.join(", "));
+    
+    return details;
+  } catch (error) {
+    console.error("Error creating spreadsheet: " + error.toString());
+    throw error;
+  }
+}</code></pre>
+        </section>
+        
+        <section id="formatting" class="section">
+            <h2>🎨 Formatting and Data Management</h2>
+            
+            <div class="card">
+                <h3>Working with Sheets and Ranges</h3>
+                <p>After creating a spreadsheet, you'll typically want to add data and format it. Key concepts:</p>
+                <ul>
+                    <li><strong>Sheets</strong> - Individual tabs within a spreadsheet</li>
+                    <li><strong>Ranges</strong> - Specific cells or groups of cells</li>
+                    <li><strong>Formats</strong> - Styling applied to cells or ranges</li>
+                </ul>
+            </div>
+            
+            <h3>Complete Formatting Example</h3>
+            <pre><code>/**
+ * Creates a professionally formatted spreadsheet
+ */
+function createFormattedSpreadsheet() {
+  // Create the spreadsheet
+  const spreadsheet = SpreadsheetApp.create("Sales Report");
+  const sheet = spreadsheet.getActiveSheet();
+  
+  // Set up headers with formatting
+  const headers = [["Date", "Product", "Quantity", "Unit Price", "Total"]];
+  const headerRange = sheet.getRange("A1:E1");
+  headerRange.setValues(headers)
+    .setFontWeight("bold")
+    .setBackground("#4285f4")
+    .setFontColor("white")
+    .setHorizontalAlignment("center");
+  
+  // Set column widths
+  sheet.setColumnWidth(1, 120); // Date column
+  sheet.setColumnWidth(2, 200); // Product column
+  sheet.setColumnWidths(3, 3, 100); // Quantity, Price, Total
+  
+  // Add sample data
+  const sampleData = [
+    [new Date(), "Wireless Mouse", 15, 24.99],
+    [new Date(), "Mechanical Keyboard", 8, 89.99],
+    [new Date(), "USB-C Cable", 25, 12.50]
+  ];
+  
+  const dataRange = sheet.getRange(2, 1, sampleData.length, 4);
+  dataRange.setValues(sampleData);
+  
+  // Add formulas for totals
+  sheet.getRange(2, 5, sampleData.length, 1).setFormulaR1C1("=RC[-2]*RC[-1]");
+  
+  // Format currency
+  sheet.getRange("D2:E" + (sampleData.length + 1)).setNumberFormat("$#,##0.00");
+  
+  // Format date
+  sheet.getRange("A2:A" + (sampleData.length + 1)).setNumberFormat("mmmm d, yyyy");
+  
+  // Add borders to all data
+  sheet.getRange("A1:E" + (sampleData.length + 1)).setBorder(
+    true, true, true, true, true, true, "#cccccc", SpreadsheetApp.BorderStyle.SOLID
+  );
+  
+  // Freeze header row
+  sheet.setFrozenRows(1);
+  
+  return spreadsheet.getUrl();
+}</code></pre>
+            
+            <div class="info-box">
+                <h4>🔧 Formatting Methods Explained</h4>
+                <p>Key formatting methods available on Range objects:</p>
+                <ul>
+                    <li><code>setBackground(color)</code> - Cell background color</li>
+                    <li><code>setFontWeight(weight)</code> - "bold", "normal"</li>
+                    <li><code>setFontColor(color)</code> - Text color</li>
+                    <li><code>setNumberFormat(format)</code> - Date, currency, etc.</li>
+                    <li><code>setHorizontalAlignment(alignment)</code> - "left", "center", "right"</li>
+                    <li><code>setBorder()</code> - Add borders to cells</li>
+                </ul>
+            </div>
+        </section>
+        
+        <section id="advanced" class="section">
+            <h2>⚡ Advanced Features and Techniques</h2>
+            
+            <div class="concept-grid">
+                <div class="concept-card">
+                    <h4>Working with Multiple Sheets</h4>
+                    <p>Create and manage multiple sheets within a single spreadsheet:</p>
+                    <pre><code>function setupMultiSheetWorkbook() {
+  const ss = SpreadsheetApp.create("Financial Report");
+  
+  // Rename default sheet
+  ss.getSheets()[0].setName("Summary");
+  
+  // Add new sheets
+  ss.insertSheet("Income Statement");
+  ss.insertSheet("Balance Sheet");
+  ss.insertSheet("Cash Flow");
+  
+  return ss.getId();
+}</code></pre>
+                </div>
+                
+                <div class="concept-card">
+                    <h4>Data Validation</h4>
+                    <p>Ensure data quality by adding validation rules:</p>
+                    <pre><code>function addDataValidation() {
+  const sheet = SpreadsheetApp.getActiveSheet();
+  const range = sheet.getRange("B2:B10");
+  
+  // Only allow specific values
+  const rule = SpreadsheetApp.newDataValidation()
+    .requireValueInList(["High", "Medium", "Low"], true)
+    .setAllowInvalid(false)
+    .build();
+    
+  range.setDataValidation(rule);
+}</code></pre>
+                </div>
+            </div>
+            
+            <h3>Working with External Data</h3>
+            <p>Apps Script can pull data from APIs and populate spreadsheets automatically:</p>
+            <pre><code>/**
+ * Fetches data from an API and populates a spreadsheet
+ */
+function populateFromAPI() {
+  const spreadsheet = SpreadsheetApp.create("API Data Report");
+  const sheet = spreadsheet.getActiveSheet();
+  
+  try {
+    // Fetch data from public API
+    const response = UrlFetchApp.fetch("https://api.example.com/data");
+    const data = JSON.parse(response.getContentText());
+    
+    // Set headers
+    sheet.getRange("A1:C1").setValues([["ID", "Name", "Value"]]);
+    
+    // Populate data
+    const rows = data.map(item => [item.id, item.name, item.value]);
+    if (rows.length > 0) {
+      sheet.getRange(2, 1, rows.length, 3).setValues(rows);
+    }
+    
+    // Auto-resize columns
+    sheet.autoResizeColumns(1, 3);
+    
+  } catch (error) {
+    console.error("Error fetching API data: " + error.toString());
+    sheet.getRange("A1").setValue("Error: " + error.message);
+  }
+  
+  return spreadsheet.getUrl();
+}</code></pre>
+        </section>
+        
+        <section id="ui" class="section">
+            <h2>🎛️ Creating User Interfaces</h2>
+            
+            <p>Apps Script can create custom interfaces that let users interact with your scripts through dialog boxes and sidebars.</p>
+            
+            <div class="step">
+                <div class="step-number">1</div>
+                <div class="step-content">
+                    <h3>Adding Custom Menus</h3>
+                    <p>Create custom menus in the Google Sheets interface:</p>
+                    <pre><code>/**
+ * Creates a custom menu when the spreadsheet opens
+ */
+function onOpen() {
+  const ui = SpreadsheetApp.getUi();
+  ui.createMenu('📊 Custom Tools')
+    .addItem('Create Report', 'showReportDialog')
+    .addItem('Format Sheet', 'formatCurrentSheet')
+    .addSeparator()
+    .addSubMenu(ui.createMenu('📈 Templates')
+      .addItem('Sales Template', 'createSalesTemplate')
+      .addItem('Budget Template', 'createBudgetTemplate'))
+    .addToUi();
+}</code></pre>
+                </div>
+            </div>
+            
+            <div class="step">
+                <div class="step-number">2</div>
+                <div class="step-content">
+                    <h3>Creating HTML Dialogs</h3>
+                    <p>Build custom interfaces using HTML service:</p>
+                    <pre><code>/**
+ * Shows a dialog for creating a new spreadsheet
+ */
+function showCreationDialog() {
+  const htmlOutput = HtmlService
+    .createHtmlOutputFromFile('CreationDialog')
+    .setWidth(400)
+    .setHeight(300);
+  
+  SpreadsheetApp.getUi().showModalDialog(htmlOutput, 'Create New Spreadsheet');
+}
+
+/**
+ * Handles the form submission from the dialog
+ */
+function createFromDialog(formData) {
+  try {
+    const spreadsheet = SpreadsheetApp.create(formData.name);
+    
+    // Apply template if selected
+    if (formData.template === 'budget') {
+      applyBudgetTemplate(spreadsheet);
+    } else if (formData.template === 'sales') {
+      applySalesTemplate(spreadsheet);
+    }
+    
+    return {
+      success: true,
+      url: spreadsheet.getUrl(),
+      message: 'Spreadsheet created successfully!'
+    };
+  } catch (error) {
+    return {
+      success: false,
+      message: 'Error: ' + error.toString()
+    };
+  }
+}</code></pre>
+                </div>
+            </div>
+            
+            <div class="info-box">
+                <h4>📋 Sample HTML Dialog (CreationDialog.html)</h4>
+                <pre><code>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+  &lt;base target="_top"&gt;
+  &lt;style&gt;
+    body { padding: 20px; font-family: Arial, sans-serif; }
+    .form-group { margin-bottom: 15px; }
+    label { display: block; margin-bottom: 5px; font-weight: bold; }
+    input, select { width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px; }
+    button { background: #4285f4; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; }
+    button:hover { background: #3367d6; }
+  &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;h3&gt;Create New Spreadsheet&lt;/h3&gt;
+  &lt;form id="creationForm"&gt;
+    &lt;div class="form-group"&gt;
+      &lt;label for="name"&gt;Spreadsheet Name:&lt;/label&gt;
+      &lt;input type="text" id="name" name="name" required&gt;
+    &lt;/div&gt;
+    &lt;div class="form-group"&gt;
+      &lt;label for="template"&gt;Template:&lt;/label&gt;
+      &lt;select id="template" name="template"&gt;
+        &lt;option value="none"&gt;No Template&lt;/option&gt;
+        &lt;option value="budget"&gt;Budget Template&lt;/option&gt;
+        &lt;option value="sales"&gt;Sales Template&lt;/option&gt;
+      &lt;/select&gt;
+    &lt;/div&gt;
+    &lt;button type="submit"&gt;Create Spreadsheet&lt;/button&gt;
+  &lt;/form&gt;
+  
+  &lt;div id="result" style="margin-top: 15px;"&gt;&lt;/div&gt;
+  
+  &lt;script&gt;
+    document.getElementById('creationForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const formData = new FormData(this);
+      const data = Object.fromEntries(formData);
+      
+      google.script.run
+        .withSuccessHandler(function(result) {
+          const resultDiv = document.getElementById('result');
+          if (result.success) {
+            resultDiv.innerHTML = '&lt;div style="color: green;"&gt;' + result.message + '&lt;/div&gt;';
+            resultDiv.innerHTML += '&lt;a href="' + result.url + '" target="_blank"&gt;Open Spreadsheet&lt;/a&gt;';
+          } else {
+            resultDiv.innerHTML = '&lt;div style="color: red;"&gt;' + result.message + '&lt;/div&gt;';
+          }
+        })
+        .withFailureHandler(function(error) {
+          document.getElementById('result').innerHTML = 
+            '&lt;div style="color: red;"&gt;Error: ' + error.message + '&lt;/div&gt;';
+        })
+        .createFromDialog(data);
+    });
+  &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+            </div>
+        </section>
+        
+        <section id="best-practices" class="section">
+            <h2>✅ Best Practices and Tips</h2>
+            
+            <div class="concept-grid">
+                <div class="concept-card">
+                    <h4>Error Handling</h4>
+                    <p>Always implement proper error handling:</p>
+                    <pre><code>function robustSpreadsheetCreation(name) {
+  try {
+    if (!name || name.trim() === '') {
+      throw new Error('Spreadsheet name cannot be empty');
+    }
+    
+    const spreadsheet = SpreadsheetApp.create(name.trim());
+    return { success: true, id: spreadsheet.getId() };
+    
+  } catch (error) {
+    console.error('Creation failed:', error);
+    return { 
+      success: false, 
+      error: error.message 
+    };
+  }
+}</code></pre>
+                </div>
+                
+                <div class="concept-card">
+                    <h4>Performance Optimization</h4>
+                    <p>Use batch operations to minimize API calls:</p>
+                    <pre><code>// Instead of this (slow):
+// range1.setValue(value1);
+// range2.setValue(value2);
+// range3.setValue(value3);
+
+// Do this (fast):
+sheet.getRange("A1:C1").setValues([[value1, value2, value3]]);</code></pre>
+                </div>
+            </div>
+            
+            <div class="warning-box">
+                <h4>⚠️ Important Limitations</h4>
+                <ul>
+                    <li><strong>Quotas:</strong> Apps Script has daily execution time limits</li>
+                    <li><strong>Rate Limiting:</strong> Too many rapid API calls may be throttled</li>
+                    <li><strong>Memory:</strong> Large data operations may exceed memory limits</li>
+                    <li><strong>Authorization:</strong> Users must grant permissions to run scripts</li>
+                </ul>
+            </div>
+            
+            <h3>Complete Project Structure</h3>
+            <p>For larger projects, organize your code into multiple files:</p>
+            <pre><code>// Code.gs - Main application logic
+function onOpen() { /* Add custom menu */ }
+function showDialog() { /* Show UI */ }
+
+// CreationService.gs - Spreadsheet creation functions
+function createSpreadsheet(name) { /* Creation logic */ }
+function applyTemplate(spreadsheet, template) { /* Template logic */ }
+
+// FormattingService.gs - Formatting functions  
+function formatAsBudget(sheet) { /* Budget formatting */ }
+function formatAsSales(sheet) { /* Sales formatting */ }
+
+// Utilities.gs - Helper functions
+function validateInput(input) { /* Validation logic */ }
+function generateReport(spreadsheet) { /* Report generation */ }</code></pre>
+        </section>
+        
+        <section class="section">
+            <h2>🚀 Getting Started</h2>
+            <p>Now that you understand the concepts, it's time to start building! Follow these steps to create your first automated spreadsheet:</p>
+            
+            <div class="step">
+                <div class="step-number">1</div>
+                <div class="step-content">
+                    <h3>Start Simple</h3>
+                    <p>Begin with basic creation and gradually add features. Don't try to build everything at once.</p>
+                </div>
+            </div>
+            
+            <div class="step">
+                <div class="step-number">2</div>
+                <div class="step-content">
+                    <h3>Test Frequently</h3>
+                    <p>Use the built-in debugger and Logger to test your code as you develop.</p>
+                </div>
+            </div>
+            
+            <div class="step">
+                <div class="step-number">3</div>
+                <div class="step-content">
+                    <h3>Review Documentation</h3>
+                    <p>Refer to the official <a href="https://developers.google.com/apps-script/reference/spreadsheet/" target="_blank">Apps Script Reference</a> for detailed method information.</p>
+                </div>
+            </div>
+            
+            <div class="center">
+                <a href="https://script.google.com/" class="button" target="_blank">Open Apps Script</a>
+                <a href="https://developers.google.com/apps-script" class="button button-secondary" target="_blank">View Documentation</a>
+            </div>
+        </section>
+        
+        <footer>
+            <p>This comprehensive guide is designed to help you master Google Apps Script for spreadsheet automation.</p>
+            <p>Remember: Practice is key to becoming proficient. Start with small projects and gradually tackle more complex automation tasks.</p>
+            <p>© 2025 - Created for educational purposes</p>
+        </footer>
+    </div>
+
+    <script>
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                const targetElement = document.querySelector(targetId);
+                const headerOffset = 80;
+                const elementPosition = targetElement.getBoundingClientRect().top;
+                const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+
+                window.scrollTo({
+                    top: offsetPosition,
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // Highlight current section in navigation
+        window.addEventListener('scroll', function() {
+            const sections = document.querySelectorAll('.section');
+            const navLinks = document.querySelectorAll('.nav-link');
+            
+            let currentSection = '';
+            
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop - 100;
+                if (window.pageYOffset >= sectionTop) {
+                    currentSection = section.getAttribute('id');
+                }
+            });
+            
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === '#' + currentSection) {
+                    link.classList.add('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
